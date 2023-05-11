@@ -3,10 +3,14 @@ using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Diagnostics;
 
-object cachelock = new object();
-Dictionary<string,string> cache = new Dictionary<string, string>();
+namespace sysprog;
+internal class Program
+{
 
-string search(string query) {
+static readonly object cachelock = new object();
+static Dictionary<string,string> cache = new Dictionary<string, string>();
+
+static string search(string query) {
     string url = $"https://api.deezer.com/search?q={query}";
     string h;
     try
@@ -36,7 +40,7 @@ string search(string query) {
     return h;
 }
 
-void ShowResult(string Message, HttpListenerContext context)
+static void ShowResult(string Message, HttpListenerContext context)
 {
     var response = context.Response;
     string responseString = $"<HTML><HEAD><META CHARSET=\"UTF-8\"></HEAD><BODY><pre>{Message}</pre></BODY></HTML>";
@@ -47,7 +51,7 @@ void ShowResult(string Message, HttpListenerContext context)
     output.Close();
 }
 
-void search_cb(object context)
+static void search_cb(object context)
 {
 //    Stopwatch stopwatch = new Stopwatch();
 //    stopwatch.Start();
@@ -79,15 +83,20 @@ void search_cb(object context)
 }
 
 
-
-HttpListener listener = new HttpListener();
-listener.Prefixes.Add("http://127.0.0.1:8080/");
-listener.Start();
-Console.WriteLine("Running at: http://127.0.0.1:8080/");
-while(true)
-{
-    ThreadPool.QueueUserWorkItem(search_cb, listener.GetContext());
- //   Thread thread = new Thread(new ParameterizedThreadStart(search_cb)); 
- //   thread.Start(listener.GetContext());
+    static HttpListener listener = new HttpListener();
+    static void Main(string[] args)
+    {
+        listener.Prefixes.Add("http://127.0.0.1:8080/");
+        listener.Start();
+        Console.WriteLine("Running at: http://127.0.0.1:8080/");
+        while(true)
+        {
+            ThreadPool.QueueUserWorkItem(search_cb, listener.GetContext());
+         //   Thread thread = new Thread(new ParameterizedThreadStart(search_cb)); 
+         //   thread.Start(listener.GetContext());
+        }
+    }
 }
+
+
 
