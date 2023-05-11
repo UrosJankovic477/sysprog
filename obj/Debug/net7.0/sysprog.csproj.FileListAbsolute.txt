@@ -1,0 +1,17 @@
+C:\Users\Uros\Desktop\sysprog\bin\Debug\net7.0\sysprog.exe
+C:\Users\Uros\Desktop\sysprog\bin\Debug\net7.0\sysprog.deps.json
+C:\Users\Uros\Desktop\sysprog\bin\Debug\net7.0\sysprog.runtimeconfig.json
+C:\Users\Uros\Desktop\sysprog\bin\Debug\net7.0\sysprog.dll
+C:\Users\Uros\Desktop\sysprog\bin\Debug\net7.0\sysprog.pdb
+C:\Users\Uros\Desktop\sysprog\obj\Debug\net7.0\sysprog.csproj.AssemblyReference.cache
+C:\Users\Uros\Desktop\sysprog\obj\Debug\net7.0\sysprog.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Uros\Desktop\sysprog\obj\Debug\net7.0\sysprog.AssemblyInfoInputs.cache
+C:\Users\Uros\Desktop\sysprog\obj\Debug\net7.0\sysprog.AssemblyInfo.cs
+C:\Users\Uros\Desktop\sysprog\obj\Debug\net7.0\sysprog.csproj.CoreCompileInputs.cache
+C:\Users\Uros\Desktop\sysprog\obj\Debug\net7.0\sysprog.dll
+C:\Users\Uros\Desktop\sysprog\obj\Debug\net7.0\refint\sysprog.dll
+C:\Users\Uros\Desktop\sysprog\obj\Debug\net7.0\sysprog.pdb
+C:\Users\Uros\Desktop\sysprog\obj\Debug\net7.0\sysprog.genruntimeconfig.cache
+C:\Users\Uros\Desktop\sysprog\obj\Debug\net7.0\ref\sysprog.dll
+C:\Users\Uros\Desktop\sysprog\bin\Debug\net7.0\Newtonsoft.Json.dll
+C:\Users\Uros\Desktop\sysprog\obj\Debug\net7.0\sysprog.csproj.CopyComplete
