@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "KzCAU9k9si89W6Os2ODOY9mEL3BAsFamIjoPA1KFHofb4yZFHg1Sa+CJ+vGOGSd1UhW44szL0JijkCUXGYvx0g==",
+  "dgSpecHash": "eYyWEAEA3Mkb+o36pWKsbGtnSnJAanIlUCiLMsh0t3ogMIMdv6GsyltdzAZp5L2oto4K3CkT+vU3tdDfuH8Sig==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Uros\\Desktop\\sysprog\\sysprog.csproj",
+  "projectFilePath": "C:\\Users\\Uros\\Desktop\\repo\\sysprog\\sysprog.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Uros\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
   ],

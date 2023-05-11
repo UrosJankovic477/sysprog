@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Uros\\Desktop\\sysprog\\sysprog.csproj": {}
+    "C:\\Users\\Uros\\Desktop\\repo\\sysprog\\sysprog.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Uros\\Desktop\\sysprog\\sysprog.csproj": {
+    "C:\\Users\\Uros\\Desktop\\repo\\sysprog\\sysprog.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Uros\\Desktop\\sysprog\\sysprog.csproj",
+        "projectUniqueName": "C:\\Users\\Uros\\Desktop\\repo\\sysprog\\sysprog.csproj",
         "projectName": "sysprog",
-        "projectPath": "C:\\Users\\Uros\\Desktop\\sysprog\\sysprog.csproj",
+        "projectPath": "C:\\Users\\Uros\\Desktop\\repo\\sysprog\\sysprog.csproj",
         "packagesPath": "C:\\Users\\Uros\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Uros\\Desktop\\sysprog\\obj\\",
+        "outputPath": "C:\\Users\\Uros\\Desktop\\repo\\sysprog\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

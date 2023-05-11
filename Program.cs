@@ -49,13 +49,17 @@ void ShowResult(string Message, HttpListenerContext context)
 
 void search_cb(object context)
 {
-    Stopwatch stopwatch = new Stopwatch();
-    stopwatch.Start();
+//    Stopwatch stopwatch = new Stopwatch();
+//    stopwatch.Start();
     HttpListenerContext listenerContext = (HttpListenerContext) context;
     try
     {
         var request = listenerContext.Request;
         var query = request.QueryString;
+        if(query.Count == 0)
+        {
+            throw new Exception("Nije unet query");
+        }
         string queryString = query[0] ?? "";
         var rawJson = search(queryString);
         var serJson = JObject.Parse(rawJson);
@@ -70,9 +74,11 @@ void search_cb(object context)
     {
         ShowResult(e.Message, listenerContext);
     }
-    stopwatch.Stop();
-    Console.WriteLine(stopwatch.Elapsed);
+//    stopwatch.Stop();
+//    Console.WriteLine(stopwatch.Elapsed);
 }
+
+
 
 HttpListener listener = new HttpListener();
 listener.Prefixes.Add("http://127.0.0.1:8080/");
@@ -80,7 +86,8 @@ listener.Start();
 Console.WriteLine("Running at: http://127.0.0.1:8080/");
 while(true)
 {
-    Thread thread = new Thread(new ParameterizedThreadStart(search_cb)); 
-    thread.Start(listener.GetContext());
+    ThreadPool.QueueUserWorkItem(search_cb, listener.GetContext());
+ //   Thread thread = new Thread(new ParameterizedThreadStart(search_cb)); 
+ //   thread.Start(listener.GetContext());
 }
 
