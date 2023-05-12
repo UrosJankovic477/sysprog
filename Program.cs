@@ -8,7 +8,7 @@ internal class Program
 {
 
 static readonly object cachelock = new object();
-static Dictionary<string,string> cache = new Dictionary<string, string>();
+static SysprogCache cache = new SysprogCache(TimeSpan.FromMinutes(2), 64);
 
 static string search(string query) {
     string url = $"https://api.deezer.com/search?q={query}";
@@ -18,19 +18,20 @@ static string search(string query) {
         lock(cachelock) {
         
             if(cache.TryGetValue(query,out h)) {
-                Console.WriteLine($"{query} je pronadjen u cache-u");
+                Console.WriteLine($"{query} was found in cache");
                 return h;
             }
         }
         HttpClient hc = new HttpClient();
-    var resp = hc.GetAsync(url).Result;
-    var content = resp.Content.ReadAsStringAsync().Result;
-    if(resp.IsSuccessStatusCode) {
-        lock(cachelock) {
-            cache[query] = content;
-            }
-        return content;
-    }
+        var resp = hc.GetAsync(url).Result;
+        var content = resp.Content.ReadAsStringAsync().Result;
+        if(resp.IsSuccessStatusCode) {
+            lock(cachelock) {
+                cache[query] = content;
+                Console.WriteLine($"{query} was added to cache");
+                }
+            return content;
+        }
     }
     catch (System.Exception e)
     {
@@ -62,7 +63,7 @@ static void search_cb(object context)
         var query = request.QueryString;
         if(query.Count == 0)
         {
-            throw new Exception("Nije unet query");
+            throw new Exception("Query string is empty");
         }
         string queryString = query[0] ?? "";
         var rawJson = search(queryString);
@@ -70,7 +71,7 @@ static void search_cb(object context)
         int? count = (int?)serJson["total"];
         if(count.HasValue && count.Value == 0)
         {
-            throw new Exception("Nema rezultata");
+            throw new Exception("No results found");
         }
         ShowResult(serJson.ToString(), listenerContext);
     }
