@@ -2,17 +2,17 @@ namespace sysprog;
 
 public class SysprogCacheValue<T>
 {
-    public DateTime LastModified { get; set; }
+    public DateTime LastModifiedOrRead { get; set; }
     public T Content { get; set; }
     public SysprogCacheValue(T value)
     {
         Content = value;
-        LastModified = DateTime.Now;
+        LastModifiedOrRead = DateTime.Now;
     }
     public SysprogCacheValue()
     {
         Content = default;
-        LastModified = DateTime.Now;
+        LastModifiedOrRead = DateTime.Now;
     }
 }
 
@@ -34,7 +34,7 @@ public class SysprogCache
         DateTime expiredTime = DateTime.Now.Subtract(timeToLive);
         foreach(var key in cache.Keys)
         {
-            if(cache.TryGetValue(key, out var value) && value.LastModified < expiredTime)
+            if(cache.TryGetValue(key, out var value) && value.LastModifiedOrRead < expiredTime)
             {
                 cache.Remove(key);
                 Program.Log($"{key} time to live has expired so it was removed from cache");
@@ -43,7 +43,10 @@ public class SysprogCache
     }
     public string this[string key]
     {
-        get { return cache[key].Content; }
+        get { 
+                cache[key].LastModifiedOrRead = DateTime.Now;
+                return cache[key].Content; 
+            }
         set {
                 cache[key] = new SysprogCacheValue<string>(value); 
             }
