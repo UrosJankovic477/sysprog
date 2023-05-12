@@ -7,6 +7,19 @@ namespace sysprog;
 internal class Program
 {
 
+static public void Log(string message)
+{
+    var st = new StackTrace();
+    var sf = st.GetFrame(1);
+    string methodName;
+    if(sf != null)
+    {
+        methodName = sf.GetMethod().ToString();
+    }
+    else methodName = "Place-Holder";
+
+    Console.WriteLine($"{Thread.CurrentThread.Name} --- {methodName}: {message} --- {DateTime.Now}");
+} 
 static readonly object cachelock = new object();
 static SysprogCache cache = new SysprogCache(TimeSpan.FromMinutes(2), 64);
 
@@ -18,7 +31,7 @@ static string search(string query) {
         lock(cachelock) {
         
             if(cache.TryGetValue(query,out h)) {
-                Console.WriteLine($"{query} was found in cache");
+                Log($"{query} was found in cache");
                 return h;
             }
         }
@@ -28,7 +41,7 @@ static string search(string query) {
         if(resp.IsSuccessStatusCode) {
             lock(cachelock) {
                 cache[query] = content;
-                Console.WriteLine($"{query} was added to cache");
+                Log($"{query} was added to cache");
                 }
             return content;
         }
@@ -54,12 +67,11 @@ static void ShowResult(string Message, HttpListenerContext context)
 
 static void search_cb(object context)
 {
-//    Stopwatch stopwatch = new Stopwatch();
-//    stopwatch.Start();
     HttpListenerContext listenerContext = (HttpListenerContext) context;
     try
     {
         var request = listenerContext.Request;
+        Log($"url: {request.Url}");
         var query = request.QueryString;
         if(query.Count == 0)
         {
@@ -78,21 +90,25 @@ static void search_cb(object context)
     catch (System.Exception e)
     {
         ShowResult(e.Message, listenerContext);
+        Log(e.Message);
     }
-//    stopwatch.Stop();
-//    Console.WriteLine(stopwatch.Elapsed);
 }
 
 
-    static HttpListener listener = new HttpListener();
+   
+    
     static void Main(string[] args)
     {
+        Thread.CurrentThread.Name = "Main Thread";
+        HttpListener listener = new HttpListener();
+        Log("Created http listener");
         listener.Prefixes.Add("http://127.0.0.1:8080/");
         listener.Start();
         Console.WriteLine("Running at: http://127.0.0.1:8080/");
         while(true)
         {
             ThreadPool.QueueUserWorkItem(search_cb, listener.GetContext());
+            Log("Got listener context");
          //   Thread thread = new Thread(new ParameterizedThreadStart(search_cb)); 
          //   thread.Start(listener.GetContext());
         }

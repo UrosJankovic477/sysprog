@@ -37,7 +37,7 @@ public class SysprogCache
             if(cache.TryGetValue(key, out var value) && value.LastModified < expiredTime)
             {
                 cache.Remove(key);
-                Console.WriteLine($"{key} time to live has expired so it was removed from cache");
+                Program.Log($"{key} time to live has expired so it was removed from cache");
             }
         }
     }
@@ -61,6 +61,6 @@ public class SysprogCache
         {
             cache.Remove(key);
         }
-        Console.WriteLine("Emptying cache");
+        Program.Log("Emptying cache");
     }
 }
