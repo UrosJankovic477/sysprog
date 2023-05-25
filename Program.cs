@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using Newtonsoft.Json.Linq;
 using System.Net;
+
 using System.Diagnostics;
 
 namespace sysprog;
@@ -65,7 +66,7 @@ static void ShowResult(string Message, HttpListenerContext context)
     output.Close();
 }
 
-static void search_cb(object context)
+static async Task search_cb(object context)
 {
     HttpListenerContext listenerContext = (HttpListenerContext) context;
     try
@@ -91,6 +92,7 @@ static void search_cb(object context)
     {
         ShowResult(e.Message, listenerContext);
         Log(e.Message);
+
     }
 }
 
@@ -107,8 +109,9 @@ static void search_cb(object context)
         Console.WriteLine("Running at: http://127.0.0.1:8080/");
         while(true)
         {
-            ThreadPool.QueueUserWorkItem(search_cb, listener.GetContext());
-            Log("Got listener context");
+            var task = Task.Factory.StartNew(search_cb, listener.GetContext());
+            
+            task.ContinueWith(t => Console.WriteLine($"{t.Id} Completed"));
          //   Thread thread = new Thread(new ParameterizedThreadStart(search_cb)); 
          //   thread.Start(listener.GetContext());
         }
