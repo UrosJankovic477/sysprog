@@ -1,5 +1,6 @@
 namespace sysprog;
 
+
 public class SysprogCacheValue<T>
 {
     public DateTime LastModifiedOrRead { get; set; }

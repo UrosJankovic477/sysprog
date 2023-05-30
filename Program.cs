@@ -5,6 +5,15 @@ using System.Net;
 using System.Diagnostics;
 
 namespace sysprog;
+class ExceptionWithStatusCode : Exception
+{
+    public int StatusCode { get; set; }
+    public ExceptionWithStatusCode(string message, int statusCode) : base(message)
+    {
+        StatusCode = statusCode;
+    }
+}
+
 internal class Program
 {
 
@@ -55,9 +64,12 @@ static string search(string query) {
     return h;
 }
 
-static void ShowResult(string Message, HttpListenerContext context)
+static void ShowResult(string Message,
+HttpListenerContext context,
+int statusCode = 200)
 {
     var response = context.Response;
+    response.StatusCode = statusCode;
     string responseString = $"<HTML><HEAD><META CHARSET=\"UTF-8\"></HEAD><BODY><pre>{Message}</pre></BODY></HTML>";
     byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
     response.ContentLength64 = buffer.Length;
@@ -72,11 +84,15 @@ static async Task search_cb(object context)
     try
     {
         var request = listenerContext.Request;
+        if(request.HttpMethod != "GET")
+        {
+            throw new ExceptionWithStatusCode("Only GET method allowed", (int)HttpStatusCode.MethodNotAllowed);
+        }
         Log($"url: {request.Url}");
         var query = request.QueryString;
         if(query.Count == 0)
         {
-            throw new Exception("Query string is empty");
+            throw new ExceptionWithStatusCode("Query string is empty", (int)HttpStatusCode.BadRequest);
         }
         string queryString = query[0] ?? "";
         var rawJson = search(queryString);
@@ -84,15 +100,19 @@ static async Task search_cb(object context)
         int? count = (int?)serJson["total"];
         if(count.HasValue && count.Value == 0)
         {
-            throw new Exception("No results found");
+            throw new ExceptionWithStatusCode("No results found", (int)HttpStatusCode.NotFound);
         }
         ShowResult(serJson.ToString(), listenerContext);
     }
-    catch (System.Exception e)
+    catch (ExceptionWithStatusCode e)
     {
-        ShowResult(e.Message, listenerContext);
-        Log(e.Message);
-
+        ShowResult(e.Message, listenerContext, e.StatusCode);
+        Log($"{e.Message} status code:{e.StatusCode}");
+    }
+    catch(Exception e)
+    {
+        ShowResult(e.Message, listenerContext, (int)HttpStatusCode.InternalServerError);
+        Log($"{e.Message} status code:{(int)HttpStatusCode.InternalServerError}");
     }
 }
 
@@ -109,11 +129,9 @@ static async Task search_cb(object context)
         Console.WriteLine("Running at: http://127.0.0.1:8080/");
         while(true)
         {
-            var task = Task.Factory.StartNew(search_cb, listener.GetContext());
-            
+            var context = listener.GetContext();
+            var task = Task.Run(() => search_cb(context));
             task.ContinueWith(t => Console.WriteLine($"{t.Id} Completed"));
-         //   Thread thread = new Thread(new ParameterizedThreadStart(search_cb)); 
-         //   thread.Start(listener.GetContext());
         }
     }
 }
